@@ -14,7 +14,7 @@ public class UserDAO extends BaseDAO {
 	public Boolean query_for_login(String username, String password) {
 		Boolean result = false;
 		if (username.length() == 0 || password.length() == 0) return false;
-		String sql = "select from user_information where username=? and password=?";
+		String sql = "select * from user_information where username=? and password=?";
 		String[] param = {username, password};
 		// rs is the result set from BaseDAO
 		rs = db.execute_query(sql, param);
@@ -31,8 +31,9 @@ public class UserDAO extends BaseDAO {
 	}
 	public Boolean query_for_regist(String username) {
 		Boolean result = true;
-		String sql = "select from user_information where username=" + username;
-		rs = db.execute_query(sql);
+		String sql = "select * from user_information where username=?";
+		String[] param = {username};
+		rs = db.execute_query(sql, param);
 		try {
 			if (rs.next()) {
 				result = false;
@@ -46,7 +47,7 @@ public class UserDAO extends BaseDAO {
 	}
 	/*  not sure if it's right  */
 	public Boolean update_for_regist(String username, String password) {
-		String sql = "insert into user_information values(?, ?)";
+		String sql = "insert into user_information(username, password) values(?, ?)";
 		String[] param = {username, password};
 		int result = db.excute_update(sql, param);
 		if (result < 0) {

@@ -1,6 +1,6 @@
 package DAO;
 
 public enum DAO {
-    AdminDAO,
+    StudentDAO,
     UserDAO;
 }
