@@ -20,7 +20,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import java.util.regex.*;
 /*
  *  written by Asou,
  *  2018/06/05
@@ -125,7 +124,7 @@ public class AddStudentCtrl extends JFrame {
 				}
 				// if make sure there's no blank label, check input form
 				if (!empty) {
-					if (!check_student_number(student_number_input.getText())) {
+					if (!StudentInformation.check_student_number(student_number_input.getText())) {
 						JOptionPane.showMessageDialog(null, "The form of student number isn't correct!", "Error", JOptionPane.ERROR_MESSAGE);
 						student_number_input.setText("");
 					} else {
@@ -199,12 +198,6 @@ public class AddStudentCtrl extends JFrame {
 		// this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	}
-	private Boolean check_student_number(String _student_number) {
-		String regex = "^[0-9]{8}$"; // student_number should be an eight digits String
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(_student_number);
-		return matcher.matches();
 	}
 	public static void main(String[] args) {
 		new AddStudentCtrl();
