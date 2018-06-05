@@ -16,9 +16,18 @@ public abstract class BaseDAO {
 		 * or only one type UserDAO 
 		 */
 	}
-	public static synchronized BaseDAO get_ability_DAO() {
-		if (baseDAO == null) {
-			baseDAO = UserDAO.getInstance();
+	public static synchronized BaseDAO get_ability_DAO(DAO dao) {
+		switch (dao) {
+		    case StudentDAO:
+		    	if (baseDAO == null || baseDAO.getClass() != StudentDAO.class) {
+		    		baseDAO = StudentDAO.getInstance();
+		    	}
+		    	break;
+		    case UserDAO:
+		    	if (baseDAO == null || baseDAO.getClass() != UserDAO.class) {
+		    		baseDAO = UserDAO.getInstance();
+		    	}
+		    	break;
 		}
 		return baseDAO;
 	}

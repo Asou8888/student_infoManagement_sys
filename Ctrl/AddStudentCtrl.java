@@ -4,18 +4,27 @@ import javax.swing.JTextField;
 
 import Actor.Academy;
 import Actor.Gender;
+import Actor.StudentInformation;
+import DAO.BaseDAO;
+import DAO.StudentDAO;
+import DAO.DAO;
+import GUI.MemForm;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Box;
 import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.util.regex.*;
+/*
+ *  written by Asou,
+ *  2018/06/05
+ */
 /*
  * class StudentInformation {
 	private String name;
@@ -32,29 +41,44 @@ public class AddStudentCtrl extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -6487332240609699170L;
+	/*
 	private JPanel name_panel, student_number_panel, gender_panel, academy_panel, major_panel,
 	               native_place_panel, email_panel, phone_number_panel, button_panel;
+	*/
 	private JLabel name_label, student_number_label, gender_label, academy_label, major_label,
 	               native_place_label, email_label, phone_number_label;
-	private JTextField name_input, student_number_input, gender_input, academy_input, major_input,
+	private JTextField name_input, student_number_input, major_input,
 	                   native_place_input, email_input, phone_number_input;
 	private JButton add_button, cancel_button;
-	private Box vbox;
+	private JComboBox<String> gender_select, academy_select;
+	// private Box vbox;
+	private String[] gender_obj = {Gender.male.toString(), Gender.female.toString()};
+	private String[] academy_obj = {Academy.Business_Adminstration.toString(), Academy.Communication_and_Design.toString(),
+			Academy.DataScience_and_Computing.toString(), Academy.Electronic_Engineering.toString(), Academy.PublicHealth_and_PreventiveMedicine.toString()};
 	public AddStudentCtrl() {
 		init();
 	}
 	void init() {
 		this.setTitle("Adding Student Operation");
-		this.setLayout(new GridLayout());
+		this.setLayout(new GridLayout(9, 2));
 		/*  Label Initialize  */
 		name_label = new JLabel("Name :");
 		name_label.setHorizontalAlignment(SwingConstants.LEFT);
 		student_number_label = new JLabel("Student Number: ");
 		student_number_label.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		gender_select = new JComboBox<String>(gender_obj);
+		// gender_select.addItem(gender_obj);
+		gender_select.setVisible(true);
 		gender_label = new JLabel("Gender :");
 		gender_label.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		academy_select = new JComboBox<String>(academy_obj);
+		// academy_select.addItem(academy_obj);
+		academy_select.setVisible(true);
 		academy_label = new JLabel("Academy :");
 		academy_label.setHorizontalAlignment(SwingConstants.LEFT);
+		
 		major_label = new JLabel("Major :");
 		major_label.setHorizontalAlignment(SwingConstants.LEFT);
 		native_place_label = new JLabel("Native Place :");
@@ -65,49 +89,15 @@ public class AddStudentCtrl extends JFrame {
 		phone_number_label.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		/*  TextField Initialize  */
-		name_input = new JTextField(30);
-		student_number_input = new JTextField(30);
-		gender_input = new JTextField(30);
-		academy_input = new JTextField(30);
-		major_input = new JTextField(30);
-		native_place_input = new JTextField(30);
-		email_input = new JTextField(30);
-		phone_number_input = new JTextField(30);
+		name_input = new JTextField();
+		student_number_input = new JTextField();
+		// gender_input = new JTextField(30);
+		// academy_input = new JTextField(30);
+		major_input = new JTextField();
+		native_place_input = new JTextField();
+		email_input = new JTextField();
+		phone_number_input = new JTextField();
 		
-		/*  Panel Initialize  */
-		name_panel = new JPanel();
-		name_panel.add(name_label);
-		name_panel.add(name_input);
-		
-		student_number_panel = new JPanel();
-		student_number_panel.add(student_number_label);
-		student_number_panel.add(student_number_input);
-		
-		gender_panel = new JPanel();
-		gender_panel.add(gender_label);
-		gender_panel.add(gender_input);
-		
-		academy_panel = new JPanel();
-		academy_panel.add(academy_label);
-		academy_panel.add(academy_input);
-		
-		major_panel = new JPanel();
-		major_panel.add(major_label);
-		major_panel.add(major_input);
-		
-		native_place_panel = new JPanel();
-		native_place_panel.add(native_place_label);
-		native_place_panel.add(native_place_input);
-		
-		email_panel = new JPanel();
-		email_panel.add(email_label);
-		email_panel.add(email_input);
-		
-		phone_number_panel = new JPanel();
-		phone_number_panel.add(phone_number_label);
-		phone_number_panel.add(phone_number_input);
-		
-		button_panel = new JPanel();
 		
 		/*  Button Initialize  */
 		add_button = new JButton("Add");
@@ -120,6 +110,47 @@ public class AddStudentCtrl extends JFrame {
 				 *  4. Update database
 				 *  5. show MemForm
 				 */
+				// check empty
+				Boolean empty = true, form_error = true;
+				if (name_input.getText() == null || name_input.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "The name label cannot be blanked!", "Error", JOptionPane.ERROR_MESSAGE);
+				} else if (student_number_input.getText() == null || student_number_input.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "The student number label cannot be blanked!", "Error", JOptionPane.ERROR_MESSAGE);
+				} else if (major_input.getText() == null || major_input.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "The major label cannot be blanked!", "Error", JOptionPane.ERROR_MESSAGE);
+				} else if (native_place_input.getText() == null || native_place_input.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "The native place label cannot be blanked!", "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					empty = false;
+				}
+				// if make sure there's no blank label, check input form
+				if (!empty) {
+					if (!check_student_number(student_number_input.getText())) {
+						JOptionPane.showMessageDialog(null, "The form of student number isn't correct!", "Error", JOptionPane.ERROR_MESSAGE);
+						student_number_input.setText("");
+					} else {
+						form_error = false;
+					}
+				}
+				// construct a new StudentInformation class to store the new input student information
+				if (!empty && !form_error) {
+					int i = JOptionPane.showConfirmDialog(null, "Are you sure the information is correct?", "Confirm", JOptionPane.YES_NO_OPTION);
+					if (i == JOptionPane.YES_OPTION) {
+						StudentInformation new_student = new StudentInformation(name_input.getText(), student_number_input.getText(),
+								Gender.valueOf(gender_select.getSelectedItem().toString()), Academy.valueOf(academy_select.getSelectedItem().toString()), major_input.getText(), 
+								native_place_input.getText(), email_input.getText(), phone_number_input.getText());
+						if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).add(new_student)) {
+							dispose();
+							JOptionPane.showConfirmDialog(null, "The new student has been added to database successfully!");
+							new MemForm();
+						} else {
+							dispose();
+							JOptionPane.showConfirmDialog(null, "Adding to database error! Maybe the Student Number you have input is duplicated.");
+							new MemForm();
+						}
+						// After dispose(), the UI will return to MemForm.
+					}
+				}
 			}
 		});
 		cancel_button.addActionListener(new ActionListener() {
@@ -127,29 +158,53 @@ public class AddStudentCtrl extends JFrame {
 				/*  1. confirm
 				 *  2. show Memform
 				 */
+				int i = JOptionPane.showConfirmDialog(null, "Are you sure to cancel this operation?", "Confirm", JOptionPane.YES_NO_OPTION);
+				if (i == JOptionPane.YES_OPTION) {
+					/* first dispose the confirm dialog,
+					 * then dispose the AddStudentCtrl
+					 */
+					dispose();
+					dispose();
+					new MemForm();
+				} else {
+					// only dispose the confirm dialog
+					dispose();
+					new MemForm();
+				}
 			}
 		});
-		button_panel.add(add_button);
-		button_panel.add(cancel_button);
 		
-		/*  Box Initialize  */
-		vbox = Box.createVerticalBox();
-		vbox.add(name_panel);
-		vbox.add(student_number_panel);
-		vbox.add(gender_panel);
-		vbox.add(academy_panel);
-		vbox.add(major_panel);
-		vbox.add(native_place_panel);
-		vbox.add(email_panel);
-		vbox.add(phone_number_panel);
-		vbox.add(button_panel);
+		this.add(name_label);
+		this.add(name_input);
+		this.add(student_number_label);
+		this.add(student_number_input);
+		this.add(gender_label);
+		this.add(gender_select);
+		this.add(academy_label);
+		this.add(academy_select);
+		this.add(major_label);
+		this.add(major_input);
+		this.add(native_place_label);
+		this.add(native_place_input);
+		this.add(email_label);
+		this.add(email_input);
+		this.add(phone_number_label);
+		this.add(phone_number_input);
+		this.add(add_button);
+		this.add(cancel_button);
 		
-		this.setContentPane(vbox);
+		// this.setContentPane(vbox);
 		this.pack();
 		this.setLocation(500, 300);
 		// this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+	private Boolean check_student_number(String _student_number) {
+		String regex = "^[0-9]{8}$"; // student_number should be an eight digits String
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(_student_number);
+		return matcher.matches();
 	}
 	public static void main(String[] args) {
 		new AddStudentCtrl();

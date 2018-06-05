@@ -96,7 +96,7 @@ public class StudentDAO extends BaseDAO {
 		}
 		return result;
 	}
-	// query
+	// query, perform the students information in database on the Center Panel of MemForm
 	public String[][] list(int pageNum) {
 		String[][] result = null;
 		if (pageNum < 1) {
