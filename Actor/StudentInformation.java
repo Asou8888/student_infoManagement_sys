@@ -1,4 +1,5 @@
 package Actor;
+import java.util.regex.*;
 
 /*  class StudentInformation:
  *     members are the keys that storing in student_information database.
@@ -81,5 +82,11 @@ public class StudentInformation {
 	}
 	public String Get_PhoneNumber() {
 	    return this.phone_number;
+	}
+	public static Boolean check_student_number(String _student_number) {
+		String regex = "^[0-9]{8}$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(_student_number);
+		return matcher.matches();
 	}
 }
