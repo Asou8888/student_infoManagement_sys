@@ -1,37 +1,42 @@
 package Ctrl;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridLayout;
 
-import Actor.StudentInformation;
-import DAO.BaseDAO;
-import DAO.StudentDAO;
-import DAO.DAO;
-import GUI.MemForm;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DeleteStudentCtrl extends JFrame {
-	/**
+import GUI.MemForm;
+import GUI.StudentInfoView;
+import Actor.StudentInformation;
+import DAO.BaseDAO;
+import DAO.DAO;
+import DAO.StudentDAO;
+
+public class EditInfoCtrl extends JFrame {
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -7712228683103660878L;
-	private JLabel student_number_label;
+	private static final long serialVersionUID = -5160151503465999622L;
+	private StudentInformation student;
 	private JTextField student_number_input;
+	private JLabel student_number_label;
 	private JPanel student_number_panel, button_panel;
-	private JButton delete_button, cancel_button;
-	public DeleteStudentCtrl() {
-		init();
-	}
-	void init() {
-		this.setTitle("Deleting Student Operation");
-		this.setLayout(new GridLayout(2, 1));
+	private JButton edit_button, cancel_button;
+	
+	public EditInfoCtrl() {
+    	init();
+    }
+    void init() {
+    	this.setTitle("Editing Student Information");
+    	this.setLayout(new GridLayout(2, 1));
 		student_number_label = new JLabel("Student Number :");
 		student_number_label.setHorizontalAlignment(SwingConstants.LEFT);
 		student_number_input = new JTextField(30);
@@ -39,19 +44,11 @@ public class DeleteStudentCtrl extends JFrame {
 		student_number_panel.add(student_number_label);
 		student_number_panel.add(student_number_input);
 		
-		delete_button = new JButton("Delete");
-		delete_button.addActionListener(new ActionListener() {
+		edit_button = new JButton("Edit");
+		edit_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				/* delete student usecase:
-				 *     1. user inputs student number, and confirms.
-				 *     2. check form of the input student_numer.
-				 *     3. util query the student information in database.
-				 *     4. give feedback information.
-				 *     5. inform user the operation result.
-				 *     6. update MemForm.
-				 */
 				Boolean empty = true, form_error = true;
-				if (student_number_input.getText() == null || student_number_input.getText().equals("")) {
+				if (student_number_input.getText().equals("") || student_number_input.getText() == null) {
 					JOptionPane.showMessageDialog(null, "Student Number cannot be empty!", "error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					empty = false;
@@ -61,21 +58,17 @@ public class DeleteStudentCtrl extends JFrame {
 						JOptionPane.showMessageDialog(null, "The form of Student Number isn't correct!", "Error", JOptionPane.ERROR_MESSAGE);
 						student_number_input.setText("");
 					} else {
-						form_error = false;
+						form_error = true;
 					}
 				}
 				if (!empty && !form_error) {
-					int i = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm", JOptionPane.YES_NO_OPTION);
-					if (i == JOptionPane.YES_OPTION) {
-						if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).delete(student_number_input.getText())) {
-							JOptionPane.showConfirmDialog(null, "The delete operation succeeded!");
-							dispose();
-							dispose();
-							new MemForm();
-						} else {
-							JOptionPane.showMessageDialog(null, "The student doesn't exist!");
-							dispose();
-						}
+					student = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).query_student(student_number_input.getText());
+					if (student == null) {
+						JOptionPane.showMessageDialog(null, "The student doesn't exist!");
+						dispose();
+					} else {
+						dispose();
+						new StudentInfoView(student);
 					}
 				}
 			}
@@ -91,13 +84,14 @@ public class DeleteStudentCtrl extends JFrame {
 					/* first dispose the confirm dialog,
 					 * then dispose the AddStudentCtrl
 					 */
+					// dispose();
 					dispose();
 					new MemForm();
 				}
 			}
 		});
 		button_panel = new JPanel();
-		button_panel.add(delete_button);
+		button_panel.add(edit_button);
 		button_panel.add(cancel_button);
 		this.add(student_number_panel);
 		this.add(button_panel);
@@ -105,8 +99,8 @@ public class DeleteStudentCtrl extends JFrame {
 		this.setLocation(500, 300);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	}
-	public static void main(String[] args) {
-		new DeleteStudentCtrl();
-	}
+    }
+    public static void main(String[] args) {
+    	new EditInfoCtrl();
+    }
 }

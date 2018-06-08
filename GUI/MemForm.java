@@ -88,6 +88,7 @@ public class MemForm extends JFrame {
 				 * 3. present an Edit Info UI.
 				 * 4. Update MemForm
 				 */
+				new EditInfoCtrl();
 			}
 		});
 		vbox = Box.createVerticalBox();
