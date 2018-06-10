@@ -68,13 +68,12 @@ public class DeleteStudentCtrl extends JFrame {
 					int i = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm", JOptionPane.YES_NO_OPTION);
 					if (i == JOptionPane.YES_OPTION) {
 						if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).delete(student_number_input.getText())) {
-							JOptionPane.showConfirmDialog(null, "The delete operation succeeded!");
+							MemForm.Update();
 							dispose();
-							dispose();
-							new MemForm();
+							JOptionPane.showMessageDialog(null, "The delete operation succeeded!");
 						} else {
-							JOptionPane.showMessageDialog(null, "The student doesn't exist!");
 							dispose();
+							JOptionPane.showMessageDialog(null, "The student doesn't exist!");
 						}
 					}
 				}
@@ -92,7 +91,6 @@ public class DeleteStudentCtrl extends JFrame {
 					 * then dispose the AddStudentCtrl
 					 */
 					dispose();
-					new MemForm();
 				}
 			}
 		});

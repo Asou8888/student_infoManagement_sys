@@ -19,26 +19,31 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 public class MemForm extends JFrame {
-	private static final long serialVersionUID = 3L;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3036858692602713273L;
 	private static int MaximumPageNum = 99;
 	private Box vbox;
 	private JPanel JPanelNorth_first_row, JPanelNorth_second_row, JPanelSouth, JPanelCentre;
 	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo;
 	private JButton NextPage, PrePage, FirstPage, LastPage;
 	private JLabel time_label, curr_page_label;
-	private JTable information_table;
+	public static JTable information_table;
 	private LocalDateTime localdatetime;
-	private DefaultTableModel MyTableModel;
+	// private DefaultTableModel MyTableModel;
 	private JScrollPane scroll_pane;
 	public static int CurrPageNum = 1;
 	public static String[] column = {"student_number", "name", "gender", "academy", "major", "native_place", "phone_number", "email"};
+	public static String[][] result;
 	public MemForm() {
 		init();
 	}
 	private void init() {
 		setTitle("Student Information System");
 		localdatetime = LocalDateTime.now();
-		time_label = new JLabel(localdatetime.toString());
+		time_label = new JLabel("Login Time: " + localdatetime.toString());
 		curr_page_label = new JLabel("1" + "th Page");
 		curr_page_label.setHorizontalAlignment(JLabel.CENTER);
 		/* North Part of MemForm:
@@ -57,7 +62,7 @@ public class MemForm extends JFrame {
 				 * 4. Update MemForm
 				 */
 				new AddStudentCtrl();
-				dispose();
+				// Update JTable Information
 			}
 		});
 		DeleteStudent = new JButton("Delete Student");
@@ -68,6 +73,7 @@ public class MemForm extends JFrame {
 				 * 3. present an Delete Student UI.
 				 * 4. Update MemForm
 				 */
+				new DeleteStudentCtrl();
 			}
 		});
 		QueryStudent = new JButton("Query Student");
@@ -78,6 +84,7 @@ public class MemForm extends JFrame {
 				 * 3. present an Query Student UI.
 				 * 4. Update MemForm
 				 */
+				new QueryStudentCtrl();
 			}
 		});
 		EditInfo = new JButton("Edit");
@@ -108,8 +115,8 @@ public class MemForm extends JFrame {
 		JPanelCentre = new JPanel();
 		JPanelCentre.setLayout(new GridLayout(1, 1));
 		// Use StudentDAO to get student information data list from database.
-		String[][] result = ((StudentDAO) BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
-		MyTableModel = new DefaultTableModel(result, column);
+		result = ((StudentDAO) BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+		// MyTableModel = new DefaultTableModel(result, column);
 		information_table = new JTable();
 		DefaultTableCellRenderer cr = new DefaultTableCellRenderer();
 		cr.setHorizontalAlignment(JLabel.CENTER);
@@ -128,7 +135,7 @@ public class MemForm extends JFrame {
 		FirstPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				CurrPageNum = 1;
-				String[][] result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+				result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
 				initJTable(information_table, result);
 				curr_page_label.setText(CurrPageNum + "th Page");
 			}
@@ -137,7 +144,7 @@ public class MemForm extends JFrame {
 		PrePage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (CurrPageNum > 1) CurrPageNum = CurrPageNum - 1;
-				String[][] result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+				result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
 				initJTable(information_table, result);
 				curr_page_label.setText(CurrPageNum + "th Page");
 			}
@@ -148,7 +155,7 @@ public class MemForm extends JFrame {
 				if (CurrPageNum < MaximumPageNum) {
 					CurrPageNum = CurrPageNum + 1;
 				}
-				String[][] result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+				result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
 				initJTable(information_table, result);
 				curr_page_label.setText(CurrPageNum + "th Page");
 			}
@@ -157,7 +164,7 @@ public class MemForm extends JFrame {
 		LastPage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				CurrPageNum = MaximumPageNum;
-				String[][] result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+				result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
 				initJTable(information_table, result);
 				curr_page_label.setText(CurrPageNum + "th Page");
 			}
@@ -170,6 +177,7 @@ public class MemForm extends JFrame {
 		this.add(vbox, BorderLayout.NORTH);
 		this.add(JPanelCentre, BorderLayout.CENTER);
 		this.add(JPanelSouth, BorderLayout.SOUTH);
+		this.setBounds(400, 200, 1090, 400);
 		this.setResizable(false);
 		this.setVisible(true);
 		/*
@@ -183,34 +191,49 @@ public class MemForm extends JFrame {
 		_table.setRowHeight(20);
 		// student_number column
 		TableColumn firstColumn = _table.getColumnModel().getColumn(0);
-		firstColumn.setPreferredWidth(60);
-		firstColumn.setMaxWidth(60);
-		firstColumn.setMinWidth(60);
+		firstColumn.setPreferredWidth(120);
+		firstColumn.setMaxWidth(120);
+		firstColumn.setMinWidth(120);
 		// name column
 		TableColumn secondColumn = _table.getColumnModel().getColumn(1);
-		secondColumn.setPreferredWidth(60);
-		secondColumn.setMaxWidth(60);
-		secondColumn.setMinWidth(60);
+		secondColumn.setPreferredWidth(120);
+		secondColumn.setMaxWidth(120);
+		secondColumn.setMinWidth(120);
 		// gender column
 		TableColumn thirdColumn = _table.getColumnModel().getColumn(2);
-		thirdColumn.setPreferredWidth(30);
-		thirdColumn.setMaxWidth(30);
-		thirdColumn.setMinWidth(30);
+		thirdColumn.setPreferredWidth(60);
+		thirdColumn.setMaxWidth(60);
+		thirdColumn.setMinWidth(60);
 		// academy column
 		TableColumn forthColumn = _table.getColumnModel().getColumn(3);
-		forthColumn.setPreferredWidth(90);
-		forthColumn.setMaxWidth(90);
-		forthColumn.setMinWidth(90);
+		forthColumn.setPreferredWidth(200);
+		forthColumn.setMaxWidth(200);
+		forthColumn.setMinWidth(200);
+		// major column
+		TableColumn fifthColumn = _table.getColumnModel().getColumn(4);
+		fifthColumn.setPreferredWidth(150);
+		fifthColumn.setMaxWidth(150);
+		fifthColumn.setMinWidth(150);
+		// native_place column
+		TableColumn sixthColumn = _table.getColumnModel().getColumn(5);
+		sixthColumn.setPreferredWidth(120);
+		sixthColumn.setMaxWidth(120);
+		sixthColumn.setMinWidth(120);
 		// phone_number column
-		TableColumn fifthColumn = _table.getColumnModel().getColumn(6);
-		fifthColumn.setPreferredWidth(60);
-		fifthColumn.setMaxWidth(60);
-		fifthColumn.setMinWidth(60);
+		TableColumn seventhColumn = _table.getColumnModel().getColumn(6);
+		seventhColumn.setPreferredWidth(120);
+		seventhColumn.setMaxWidth(120);
+		seventhColumn.setMinWidth(120);
 		// email column
-		TableColumn sixthColumn = _table.getColumnModel().getColumn(7);
-		sixthColumn.setPreferredWidth(90);
-		sixthColumn.setMaxWidth(90);
-		sixthColumn.setMinWidth(90);
+		TableColumn eighthColumn = _table.getColumnModel().getColumn(7);
+		eighthColumn.setPreferredWidth(200);
+		eighthColumn.setMaxWidth(200);
+		eighthColumn.setMinWidth(200);
+	}
+	public static void Update() {
+		CurrPageNum = 1;
+		result = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).list(CurrPageNum);
+		initJTable(information_table, result);
 	}
 	public static void main(String[] args) {
 		new MemForm();

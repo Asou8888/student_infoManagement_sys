@@ -1,5 +1,6 @@
 package Ctrl;
 import GUI.StudentInfoView;
+import GUI.Operation;
 
 /*
  *  written by Asou,
@@ -21,7 +22,7 @@ public class AddStudentCtrl {
 		init();
 	}
 	void init() {
-		new StudentInfoView();
+		new StudentInfoView(Operation.Adding_Student);
 	}
 	public static void main(String[] args) {
 		new AddStudentCtrl();

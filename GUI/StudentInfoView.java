@@ -35,30 +35,30 @@ public class StudentInfoView extends JFrame {
     private String[] academy_obj = {Academy.Business_Adminstration.toString(), Academy.Communication_and_Design.toString(),
     Academy.DataScience_and_Computing.toString(), Academy.Electronic_Engineering.toString(), Academy.PublicHealth_and_PreventiveMedicine.toString()};
     
-    private enum Operation {
-    	Adding_Student,
-    	Edit_Student_Info
-    };
+    private Operation operation;
+    private StudentInformation student;
     /* the construct function with no parameters,
      * will be called by AddStudentCtrl.
      */
-    public StudentInfoView() {
-        init(Operation.Adding_Student);
+    public StudentInfoView(Operation _operation) {
+    	this.operation = _operation;
+        init();
     }
     
     /* the construct function with parameters(reading from database),
      * will be called by EditInfoCtrl.
      */
-    public StudentInfoView(StudentInformation student) {
+    public StudentInfoView(Operation _operation, StudentInformation _student) {
     	// StudentInformation student = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).query_student(_student_number);
-    	init(Operation.Edit_Student_Info);
-    	set_student_information(student);
+    	this.operation = _operation;
+    	this.student = _student;
+    	init();
     }
     
-    public void init(Operation operation) {
-    	if (operation.equals(Operation.Adding_Student)) {
+    public void init() {
+    	if (this.operation.equals(Operation.Adding_Student)) {
     		this.setTitle("Adding Student Operation");
-    	} else if (operation.equals(Operation.Edit_Student_Info)) {
+    	} else if (this.operation.equals(Operation.Edit_Student_Info)) {
     		this.setTitle("Student Information Editing");
     	}
 		this.setLayout(new GridLayout(9, 2));
@@ -92,13 +92,14 @@ public class StudentInfoView extends JFrame {
 		/*  TextField Initialize  */
 		name_input = new JTextField();
 		student_number_input = new JTextField();
-		// gender_input = new JTextField(30);
-		// academy_input = new JTextField(30);
 		major_input = new JTextField();
 		native_place_input = new JTextField();
 		email_input = new JTextField();
 		phone_number_input = new JTextField();
 		
+		if (this.operation.equals(Operation.Edit_Student_Info)) {
+			set_student_information(student);
+		}
 		
 		/*  Button Initialize  */
 		submit_button = new JButton("Submit");
@@ -138,31 +139,30 @@ public class StudentInfoView extends JFrame {
 					int i = JOptionPane.showConfirmDialog(null, "Are you sure the information is correct?", "Confirm", JOptionPane.YES_NO_OPTION);
 					if (i == JOptionPane.YES_OPTION) {
 						if (operation.equals(Operation.Adding_Student)) {
-							StudentInformation new_student = new StudentInformation(name_input.getText(), student_number_input.getText(),
+							student = new StudentInformation(name_input.getText(), student_number_input.getText(),
 									Gender.valueOf(gender_select.getSelectedItem().toString()), Academy.valueOf(academy_select.getSelectedItem().toString()), major_input.getText(), 
-									native_place_input.getText(), email_input.getText(), phone_number_input.getText());
-							if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).add(new_student)) {
+									native_place_input.getText(), phone_number_input.getText(), email_input.getText());
+							if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).add(student)) {
+								MemForm.Update();
 								dispose();
-								JOptionPane.showConfirmDialog(null, "The new student has been added to database successfully!");
-								new MemForm();
+								JOptionPane.showMessageDialog(null, "The new student has been added to database successfully!");
 							} else {
+								MemForm.Update();
 								dispose();
-								JOptionPane.showConfirmDialog(null, "Adding to database error! Maybe the Student Number you have input is duplicated.");
-								new MemForm();
+								JOptionPane.showMessageDialog(null, "Adding to database error! Maybe the Student Number you have input is duplicated.");
 							}
 							// After dispose(), the UI will return to MemForm.
 						} else if (operation.equals(Operation.Edit_Student_Info)) {
-							StudentInformation student = new StudentInformation(name_input.getText(), student_number_input.getText(),
+							student = new StudentInformation(name_input.getText(), student_number_input.getText(),
 									Gender.valueOf(gender_select.getSelectedItem().toString()), Academy.valueOf(academy_select.getSelectedItem().toString()), major_input.getText(), 
-									native_place_input.getText(), email_input.getText(), phone_number_input.getText());
+									native_place_input.getText(), phone_number_input.getText(), email_input.getText());
 							if (((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).update(student)) {
 								dispose();
-								JOptionPane.showConfirmDialog(null, "The new student has been added to database successfully!");
-								new MemForm();
+								MemForm.Update();
+								JOptionPane.showMessageDialog(null, "The new student has been added to database successfully!");
 							} else {
 								dispose();
-								JOptionPane.showConfirmDialog(null, "Adding to database error! Maybe the Student Number you have input is duplicated.");
-								new MemForm();
+								JOptionPane.showMessageDialog(null, "Adding to database error! Maybe the Student Number you have input is duplicated.");
 							}
 						}
 					}
@@ -176,16 +176,7 @@ public class StudentInfoView extends JFrame {
 				 */
 				int i = JOptionPane.showConfirmDialog(null, "Are you sure to cancel this operation?", "Confirm", JOptionPane.YES_NO_OPTION);
 				if (i == JOptionPane.YES_OPTION) {
-					/* first dispose the confirm dialog,
-					 * then dispose the AddStudentCtrl
-					 */
 					dispose();
-					dispose();
-					new MemForm();
-				} else {
-					// only dispose the confirm dialog
-					dispose();
-					new MemForm();
 				}
 			}
 		});
@@ -202,10 +193,10 @@ public class StudentInfoView extends JFrame {
 		this.add(major_input);
 		this.add(native_place_label);
 		this.add(native_place_input);
-		this.add(email_label);
-		this.add(email_input);
 		this.add(phone_number_label);
 		this.add(phone_number_input);
+		this.add(email_label);
+		this.add(email_input);
 		this.add(submit_button);
 		this.add(cancel_button);
 		
@@ -224,10 +215,10 @@ public class StudentInfoView extends JFrame {
         native_place_input.setText(student.Get_NativePlace());
         email_input.setText(student.Get_Email());
         phone_number_input.setText(student.Get_PhoneNumber());
-        gender_select.setSelectedItem(student.Get_Gender());
-        academy_select.setSelectedItem(student.Get_Academy());
+        gender_select.setSelectedItem(student.Get_Gender().toString());
+        academy_select.setSelectedItem(student.Get_Academy().toString());
     }
     public static void main(String[] args) {
-    	new StudentInfoView();
+    	// new StudentInfoView();
     }
 }

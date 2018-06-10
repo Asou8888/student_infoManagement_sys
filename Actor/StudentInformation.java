@@ -16,7 +16,7 @@ public class StudentInformation {
 	private String email;
 	private String phone_number;
 	public StudentInformation(String _name, String _student_number, Gender _gender, Academy _academy,
-			String _major, String _native_place, String _email, String _phone_number) {
+			String _major, String _native_place, String _phone_number, String _email) {
 		if (_email == null || _email.equals("")) {
 			this.email = "";
 		} else {

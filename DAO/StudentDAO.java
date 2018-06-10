@@ -49,12 +49,12 @@ public class StudentDAO extends BaseDAO {
 				student = new StudentInformation();
 				student.Set_Name(rs.getString("name"));
 				student.Set_StudentNumber(rs.getString("student_number"));
-				student.Set_Gender(Gender.valueOf("gender"));
+				student.Set_Gender(Gender.valueOf(rs.getString("gender")));
 				student.Set_Academy(Academy.valueOf(rs.getString("academy")));
 				student.Set_Major(rs.getString("major"));
 				student.Set_NativePlace(rs.getString("native_place"));
+				student.Set_PhoneNumber(rs.getString("phone_number"));
 				student.Set_Email(rs.getString("email"));
-				student.Set_PhoneNumber("phone_number");
 			}
 		} catch (SQLException exception) {
 		    	exception.printStackTrace();
@@ -78,8 +78,11 @@ public class StudentDAO extends BaseDAO {
 			 * storing the basic information of a student,
 			 * which is including in class StudentUser.
 			 */
-			String sql = "update student_information set student_number=?, name=?, gender=?, academy=?, major=?, native_place=?, phone_number=?, email=?";
-			String param[] = {student.Get_StudentNumber(), student.get_Name(), student.Get_Gender().toString(), student.Get_Academy().toString(), student.Get_Major(), student.Get_NativePlace(), student.Get_PhoneNumber(), student.Get_Email()};
+			String sql = "update student_information set name=?, gender=?, academy=?, major=?, native_place=?, phone_number=?, email=? where student_number=?";
+			String param[] = {student.get_Name(), student.Get_Gender().toString(), 
+					student.Get_Academy().toString(), student.Get_Major(), 
+					student.Get_NativePlace(), student.Get_PhoneNumber(), 
+					student.Get_Email(), student.Get_StudentNumber()};
 			int rowCount = db.excute_update(sql, param);
 			if (rowCount == 1) result = true;
 		} catch (SQLException exception) {
@@ -125,7 +128,9 @@ public class StudentDAO extends BaseDAO {
 				return result;
 			}
 			String sql = "insert into student_information(student_number, name, gender, academy, major, native_place, phone_number, email) values(?,?,?,?,?,?,?,?)";
-			String[] param = {student.Get_StudentNumber(), student.get_Name(), student.Get_Gender().toString(), student.Get_Major(), student.Get_Academy().toString(), student.Get_Major(), student.Get_NativePlace(), student.Get_PhoneNumber(), student.Get_Email()};
+			String[] param = {student.Get_StudentNumber(), student.get_Name(), student.Get_Gender().toString(), 
+					student.Get_Academy().toString(), student.Get_Major(), student.Get_NativePlace(), 
+					student.Get_PhoneNumber(), student.Get_Email()};
 			if (db.excute_update(sql, param) == 1) {
 				result = true;
 			}
@@ -165,17 +170,53 @@ public class StudentDAO extends BaseDAO {
 			destroy();
 		}
 		return result;
-	} 
+	}
+	public String[][] list(int pageNum, String condition, String _param) {
+		String[][] result = null;
+		if (pageNum < 1) {
+			return result;
+		}
+		if (condition.equals("") || condition == null) {
+			/* if no querying condition is input,
+			 * then query for all student in database,
+			 * and show the firstPage 
+			 */
+			return list(pageNum);
+		}
+		List<StudentInformation> students = new ArrayList<StudentInformation>();
+		// int beginNum = (pageNum - 1) * showNum;
+		String sql = "select * from student_information where " + condition;
+		String[] param = _param.split(",");
+		// Integer[] param = {beginNum, showNum};
+		// System.out.println(sql);
+		rs = db.execute_query(sql, param);
+		try {
+			while (rs.next()) {
+				build_student_information_list(rs, students);
+			}
+			if (students.size() > 0) {
+				result = new String[students.size()][fieldNum];
+				for (int j = 0; j < students.size(); j++) {
+					build_student_information_result(result, students, j);
+				}
+			}
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		} finally {
+			destroy();
+		}
+		return result;
+	}
 	private void build_student_information_list(ResultSet rs, List<StudentInformation> student_list) throws SQLException {
 		StudentInformation student = new StudentInformation();
 		student.Set_Name(rs.getString("name"));
 		student.Set_StudentNumber(rs.getString("student_number"));
-		student.Set_Gender(Gender.valueOf("gender"));
+		student.Set_Gender(Gender.valueOf(rs.getString("gender")));
 		student.Set_Academy(Academy.valueOf(rs.getString("academy")));
 		student.Set_Major(rs.getString("major"));
 		student.Set_NativePlace(rs.getString("native_place"));
+		student.Set_PhoneNumber(rs.getString("phone_number"));
 		student.Set_Email(rs.getString("email"));
-		student.Set_PhoneNumber("phone_number");
 		student_list.add(student);
 	}
 	private void build_student_information_result(String[][] result, List<StudentInformation> student_list, int j) throws SQLException {
@@ -188,5 +229,8 @@ public class StudentDAO extends BaseDAO {
 		result[j][5] = student.Get_NativePlace();
 		result[j][6] = student.Get_PhoneNumber();
 		result[j][7] = student.Get_Email();
+	}
+	public static void main(String[] args) {
+		new StudentDAO();
 	}
 }

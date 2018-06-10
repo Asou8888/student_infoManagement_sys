@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import GUI.MemForm;
+import GUI.Operation;
 import GUI.StudentInfoView;
 import Actor.StudentInformation;
 import DAO.BaseDAO;
@@ -58,17 +59,17 @@ public class EditInfoCtrl extends JFrame {
 						JOptionPane.showMessageDialog(null, "The form of Student Number isn't correct!", "Error", JOptionPane.ERROR_MESSAGE);
 						student_number_input.setText("");
 					} else {
-						form_error = true;
+						form_error = false;
 					}
 				}
 				if (!empty && !form_error) {
 					student = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).query_student(student_number_input.getText());
 					if (student == null) {
-						JOptionPane.showMessageDialog(null, "The student doesn't exist!");
 						dispose();
+						JOptionPane.showMessageDialog(null, "The student doesn't exist!");
 					} else {
 						dispose();
-						new StudentInfoView(student);
+						new StudentInfoView(Operation.Edit_Student_Info, student);
 					}
 				}
 			}
@@ -86,7 +87,6 @@ public class EditInfoCtrl extends JFrame {
 					 */
 					// dispose();
 					dispose();
-					new MemForm();
 				}
 			}
 		});

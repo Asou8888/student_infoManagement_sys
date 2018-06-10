@@ -56,4 +56,7 @@ public class UserDAO extends BaseDAO {
 			return true;
 		}
 	}
+	public static void main(String[] args) {
+		new UserDAO();
+	}
 }
