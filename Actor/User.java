@@ -1,7 +1,6 @@
 package Actor;
 import java.lang.String;
 import java.lang.Boolean;
-import java.util.Date;
 
 public abstract class User {
     private String username;
@@ -11,13 +10,23 @@ public abstract class User {
      * False: Student User
      */
     private Boolean Authentication;
-    private Date Regist_Date;
     /* other information:
      * Real Name, type String
      * Phone Number, type char[11]
      * Address, type String
      * Detail, type String
      */
+    public User() {
+    	init();
+    }
+    private void init() {
+    	
+    }
+    public User(String _username, String _password, Boolean _authentication) {
+    	this.username = _username;
+    	this.password = _password.toCharArray();
+    	this.Authentication = _authentication;
+    }
     public String Get_Username() {
     	return this.username;
     }
@@ -35,11 +44,5 @@ public abstract class User {
     }
     protected void Set_Authentication(Boolean _auth) {
     	this.Authentication = _auth;
-    }
-    public Date Get_Regist_Date() {
-    	return this.Regist_Date;
-    }
-    public void Set_Regust_Date(Date _date) {
-    	this.Regist_Date = _date;
     }
 }

@@ -1,6 +1,7 @@
 package Actor;
 
 public class AdminUser extends User {
+	/*
 	private String name;
 	private String email;
 	private String phone_number;
@@ -22,6 +23,7 @@ public class AdminUser extends User {
 	public String Get_PhoneNumber() {
 	    return this.phone_number;
 	}
+	*/
 	public AdminUser() {
 		init();
 	}

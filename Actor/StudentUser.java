@@ -2,9 +2,9 @@ package Actor;
 
 public class StudentUser extends User {
 	private StudentInformation student_information;
-    public StudentUser() {
-    	init();
-    }
+	public StudentUser() {
+		init();
+	}
     public StudentUser(String _name, String _student_number, Gender _gender, 
     		Academy _academy, String _major, String _native_place, String _email, String _phone_number) {
     	student_information = new StudentInformation();
@@ -14,7 +14,7 @@ public class StudentUser extends User {
     public StudentUser(StudentInformation _student_information) {
     	this.student_information = _student_information;
     }
-    void init() {
+    private void init() {
     	/*  read information from database
     	 *  Authentication should be initial to false
     	 */

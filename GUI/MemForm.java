@@ -14,6 +14,7 @@ import javax.swing.Box;
 
 import DAO.*;
 import Ctrl.*;
+import Actor.User;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,13 +24,14 @@ public class MemForm extends JFrame {
 	/**
 	 * 
 	 */
+	private User user;
 	private static final long serialVersionUID = -3036858692602713273L;
 	private static int MaximumPageNum = 99;
 	private Box vbox;
 	private JPanel JPanelNorth_first_row, JPanelNorth_second_row, JPanelSouth, JPanelCentre;
 	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo;
 	private JButton NextPage, PrePage, FirstPage, LastPage;
-	private JLabel time_label, curr_page_label;
+	private JLabel time_label, curr_page_label, username_label;
 	public static JTable information_table;
 	private LocalDateTime localdatetime;
 	// private DefaultTableModel MyTableModel;
@@ -40,9 +42,14 @@ public class MemForm extends JFrame {
 	public MemForm() {
 		init();
 	}
+	public MemForm(String username) {
+		user = AuthenticalCtrl.get_ability_user(username);
+		init();
+	}
 	private void init() {
 		setTitle("Student Information System");
 		localdatetime = LocalDateTime.now();
+		username_label = new JLabel("Welcome! User: " + user.Get_Username());
 		time_label = new JLabel("Login Time: " + localdatetime.toString());
 		curr_page_label = new JLabel("1" + "th Page");
 		curr_page_label.setHorizontalAlignment(JLabel.CENTER);
@@ -100,6 +107,7 @@ public class MemForm extends JFrame {
 		});
 		vbox = Box.createVerticalBox();
 		JPanelNorth_first_row = new JPanel();
+		JPanelNorth_first_row.add(username_label);
 		JPanelNorth_first_row.add(time_label);
 		JPanelNorth_second_row = new JPanel();
 		JPanelNorth_second_row.add(AddStudent);

@@ -46,15 +46,29 @@ public class UserDAO extends BaseDAO {
 		return result;
 	}
 	/*  not sure if it's right  */
-	public Boolean update_for_regist(String username, String password) {
-		String sql = "insert into user_information(username, password) values(?, ?)";
-		String[] param = {username, password};
+	public Boolean update_for_regist(String username, String password, Boolean authentication) {
+		String sql = "insert into user_information(username, password, authentication) values(?, ?, ?)";
+		Object[] param = {username, password, authentication};
 		int result = db.excute_update(sql, param);
 		if (result < 0) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	public Boolean query_for_authentication(String username) {
+		Boolean result = false;
+		String sql = "select authentication from user_information where username=?";
+		String[] param = {username};
+		rs = db.execute_query(sql, param);
+		try {
+			if (rs.next()) result = rs.getBoolean("authentication");
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		} finally {
+			destroy();
+		}
+		return result;
 	}
 	public static void main(String[] args) {
 		new UserDAO();

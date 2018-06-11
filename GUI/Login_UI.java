@@ -109,11 +109,11 @@ public class Login_UI extends JFrame implements ActionListener {
 			*/
 			if (check_login_information()) {
 				dispose();
-				JOptionPane.showConfirmDialog(null,  "Login Sucessfully! Welcome to Student Information System!");
 				/* show MemForm
 				 * save the login information
 				 */
-				new MemForm();
+				new MemForm(username_input.getText());
+				JOptionPane.showMessageDialog(null,  "Login Sucessfully! Welcome to Student Information System!");
 			} else {
 				JOptionPane.showConfirmDialog(null, "Username or Password error! Please try again!");
 				username_input.setText("");

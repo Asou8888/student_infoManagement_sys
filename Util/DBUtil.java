@@ -22,7 +22,7 @@ public class DBUtil {
 			if (conn == null || conn.isClosed()) {
 				Class.forName("com.mysql.jdbc.Driver");
 				/*  test is a name of database table  */
-				String url = "jdbc:mysql://localhost:3306/test"; // JDBC's URL
+				String url = "jdbc:mysql://localhost:3306/RUNOOB"; // JDBC's URL
 				String rootname = "root";
 				String pwd = "123456";
 				conn = DriverManager.getConnection(url, rootname, pwd);
@@ -102,6 +102,6 @@ public class DBUtil {
 	}
 	public static void main(String[] args) {
 		DBUtil dbutil = new DBUtil();
-		System.out.printf("%d", dbutil.get_connection());
+		// System.out.printf("%d", dbutil.get_connection());
 	}
 }
