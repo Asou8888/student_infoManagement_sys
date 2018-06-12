@@ -205,7 +205,7 @@ public class StudentInfoView extends JFrame {
 		this.setLocation(500, 300);
 		// this.setResizable(false);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     private void set_student_information(StudentInformation student) {
     	name_input.setText(student.get_Name());

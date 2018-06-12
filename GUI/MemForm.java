@@ -26,12 +26,12 @@ public class MemForm extends JFrame {
 	/**
 	 * 
 	 */
-	private User user;
+	private static User user;
 	private static final long serialVersionUID = -3036858692602713273L;
 	private static int MaximumPageNum = 99;
 	private Box vbox;
 	private JPanel JPanelNorth_first_row, JPanelNorth_second_row, JPanelSouth, JPanelCentre;
-	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo, LogOut;
+	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo, LogOut, Personal_Information;
 	private JButton NextPage, PrePage, FirstPage, LastPage;
 	private JLabel time_label, curr_page_label, username_label;
 	public static JTable information_table;
@@ -47,6 +47,9 @@ public class MemForm extends JFrame {
 	public MemForm(String username) {
 		user = AuthenticalCtrl.get_ability_user(username);
 		init();
+	}
+	public static String get_username() {
+		return user.Get_Username();
 	}
 	private void init() {
 		setTitle("Student Information System");
@@ -133,16 +136,41 @@ public class MemForm extends JFrame {
 				}
 			}
 		});
+		Personal_Information = new JButton("Personal Information");
+		Personal_Information.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				new CheckInfoCtrl();
+			}
+		});
 		vbox = Box.createVerticalBox();
 		JPanelNorth_first_row = new JPanel();
 		JPanelNorth_first_row.add(username_label);
 		JPanelNorth_first_row.add(time_label);
 		JPanelNorth_second_row = new JPanel();
-		JPanelNorth_second_row.add(AddStudent);
+		JPanel jp1 = new JPanel();
+		JPanel jp2 = new JPanel();
+		jp1.add(AddStudent);
+		jp1.add(DeleteStudent);
+		jp1.add(EditInfo);
+		jp1.add(QueryStudent);
+		jp2.add(Personal_Information);
+		jp2.add(LogOut);
+		JPanelNorth_second_row.add(jp1);
+		JPanelNorth_second_row.add(jp2);
+		/*AddStudent.setSize(60, 20);
+		DeleteStudent.setSize(60, 20);
+		QueryStudent.setSize(60, 20);
+		EditInfo.setSize(60, 20);
+		LogOut.setSize(60, 20);
+		Personal_Information.setSize(65, 20);
+		*/
+		/* JPanelNorth_second_row.add(AddStudent);
 		JPanelNorth_second_row.add(DeleteStudent);
 		JPanelNorth_second_row.add(QueryStudent);
 		JPanelNorth_second_row.add(EditInfo);
 		JPanelNorth_second_row.add(LogOut);
+		JPanelNorth_second_row.add(Personal_Information);
+		*/
 		vbox.add(JPanelNorth_first_row);
 		vbox.add(JPanelNorth_second_row);
 		/* JPanelCentre showing some items of Student Information data in database.

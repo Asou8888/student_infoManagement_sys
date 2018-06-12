@@ -70,6 +70,24 @@ public class UserDAO extends BaseDAO {
 		}
 		return result;
 	}
+	public String query_for_student_number(String username) {
+		String sql = "select student_number from user_student_link where username=?";
+		Object[] param = {username};
+		String student_number = null;
+		rs = db.execute_query(sql, param);
+		try {
+			if (rs.next()) {
+				student_number = rs.getString("student_number");
+			} else {
+				student_number = "";
+			}
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		} finally {
+			destroy();
+		}
+		return student_number;
+	}
 	public Boolean update_for_linking(String username, String student_number) {
 		String sql = "insert into user_student_link(username, student_number) values(?,?)";
 		Object[] param = {username, student_number};

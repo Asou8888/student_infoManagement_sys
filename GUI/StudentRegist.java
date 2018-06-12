@@ -95,7 +95,7 @@ public class StudentRegist extends JFrame {
 		this.pack();
 		this.setLocation(500, 300);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	private Boolean insert_data(String username, char[] password, Boolean authentication) {
 		UserDAO userDAO = (UserDAO)BaseDAO.get_ability_DAO(DAO.UserDAO);
