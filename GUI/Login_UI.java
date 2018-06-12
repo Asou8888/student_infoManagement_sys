@@ -14,9 +14,9 @@ import DAO.BaseDAO;
 import DAO.UserDAO;
 import DAO.DAO;
 
-public class Login_UI extends JFrame implements ActionListener {
+public class Login_UI extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private JButton login_button, exit_button;
+	private JButton login_button, exit_button, joinIn_button;
 	private JLabel username_label, password_label;
 	private JTextField username_input;
 	private JPasswordField password_input;
@@ -27,6 +27,7 @@ public class Login_UI extends JFrame implements ActionListener {
 	private void init() {
 		login_button = new JButton("Log In");
 		exit_button = new JButton("Exit");
+		joinIn_button = new JButton("Join In");
 		username_label = new JLabel("Username: "); // Start with character, consist of characters, digits and _, -
 		password_label = new JLabel("Password: "); // 8-20 digits or characters
 		username_input = new JTextField(20); // maximum length limit: 20
@@ -44,18 +45,25 @@ public class Login_UI extends JFrame implements ActionListener {
 		JPanel jp3 = new JPanel();
 		jp3.add(login_button);
 		jp3.add(exit_button);
+		jp3.add(joinIn_button);
 		vbox.add(jp1);
 		vbox.add(jp2);
 		vbox.add(jp3);
-		login_button.addActionListener(this);
-		/*login_button.addActionListener(new ActionListener() {
+	    // login_button.addActionListener(this);
+		login_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				check_login_information(username_input.getText(), String.valueOf(password_input.getPassword()));
+				if (check_login_information()) {
+					dispose();
+					new MemForm(username_input.getText());
+					JOptionPane.showMessageDialog(null,  "Login Sucessfully! Welcome to Student Information System!");
+				} else {
+					JOptionPane.showConfirmDialog(null, "Username or Password error! Please try again!");
+					username_input.setText("");
+					password_input.setText("");
+				}
 			}
 		});
-		*/
-		exit_button.addActionListener(this);
-		/*
+		// exit_button.addActionListener(this);
 		exit_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				int i = JOptionPane.showConfirmDialog(null, "Are you sure to exit?", "Confirm", JOptionPane.YES_NO_OPTION);
@@ -64,7 +72,12 @@ public class Login_UI extends JFrame implements ActionListener {
 				}
 			}
 		});
-		*/
+		joinIn_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				dispose();
+				new Regist_UI();
+			}
+		});
 		this.setContentPane(vbox);
 		this.setTitle("Log In");
 		this.setLocation(500, 300);
@@ -87,38 +100,6 @@ public class Login_UI extends JFrame implements ActionListener {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == exit_button) {
-			int i = JOptionPane.showConfirmDialog(null, "Are you sure to exit?", "Confirm", JOptionPane.YES_NO_OPTION);
-			if (i == JOptionPane.YES_OPTION) {
-				System.exit(0);
-			}
-		} else if (event.getSource() == login_button) {
-			// search the username in database, and check the password
-			/*
-			if (username_input.getText().equals("admin") && String.valueOf(password_input.getPassword()).equals("admin")) {
-				JOptionPane.showConfirmDialog(null, "Log in Success! Welcome to Student Information System!");
-				System.exit(0);
-			} else {
-				JOptionPane.showConfirmDialog(null, "Username or Password error! Please try again!");
-				username_input.setText("");
-				password_input.setText("");
-			}
-			*/
-			if (check_login_information()) {
-				dispose();
-				/* show MemForm
-				 * save the login information
-				 */
-				new MemForm(username_input.getText());
-				JOptionPane.showMessageDialog(null,  "Login Sucessfully! Welcome to Student Information System!");
-			} else {
-				JOptionPane.showConfirmDialog(null, "Username or Password error! Please try again!");
-				username_input.setText("");
-				password_input.setText("");
-			}
 		}
 	}
 	public static void main(String[] args) {

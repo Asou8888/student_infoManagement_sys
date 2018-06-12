@@ -20,7 +20,7 @@ create table user_information (
 );
 
 create table  user_student_link (
-    user_id INTEGER,
+    username CHAR(20),
     student_number CHAR(8),
     foreign key(user_id) references user_information(user_id),
     foreign key(student_number) references student_information(student_number)

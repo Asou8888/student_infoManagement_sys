@@ -14,10 +14,12 @@ import javax.swing.Box;
 
 import DAO.*;
 import Ctrl.*;
+import Actor.AdminUser;
 import Actor.User;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class MemForm extends JFrame {
 	
@@ -29,7 +31,7 @@ public class MemForm extends JFrame {
 	private static int MaximumPageNum = 99;
 	private Box vbox;
 	private JPanel JPanelNorth_first_row, JPanelNorth_second_row, JPanelSouth, JPanelCentre;
-	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo;
+	private JButton AddStudent, DeleteStudent, QueryStudent, EditInfo, LogOut;
 	private JButton NextPage, PrePage, FirstPage, LastPage;
 	private JLabel time_label, curr_page_label, username_label;
 	public static JTable information_table;
@@ -68,7 +70,11 @@ public class MemForm extends JFrame {
 				 * 3. present an AddStudent UI.
 				 * 4. Update MemForm
 				 */
-				new AddStudentCtrl();
+				if (user.getClass() != AdminUser.class) {
+					JOptionPane.showMessageDialog(null, "You have no Authentication to this operation!");
+				} else {
+					new AddStudentCtrl();
+				}
 				// Update JTable Information
 			}
 		});
@@ -80,7 +86,11 @@ public class MemForm extends JFrame {
 				 * 3. present an Delete Student UI.
 				 * 4. Update MemForm
 				 */
-				new DeleteStudentCtrl();
+				if (user.getClass() != AdminUser.class) {
+					JOptionPane.showMessageDialog(null, "You have no Authentication to this operation!");
+				} else {
+					new DeleteStudentCtrl();
+				}
 			}
 		});
 		QueryStudent = new JButton("Query Student");
@@ -91,7 +101,11 @@ public class MemForm extends JFrame {
 				 * 3. present an Query Student UI.
 				 * 4. Update MemForm
 				 */
-				new QueryStudentCtrl();
+				if (user.getClass() != AdminUser.class) {
+					JOptionPane.showMessageDialog(null, "You have no Authentication to this operation!");
+				} else {
+					new QueryStudentCtrl();
+				}
 			}
 		});
 		EditInfo = new JButton("Edit");
@@ -102,7 +116,21 @@ public class MemForm extends JFrame {
 				 * 3. present an Edit Info UI.
 				 * 4. Update MemForm
 				 */
-				new EditInfoCtrl();
+				if (user.getClass() != AdminUser.class) {
+					JOptionPane.showMessageDialog(null, "You have no Authentication to this operation!");
+				} else {
+					new EditInfoCtrl();
+				}
+			}
+		});
+		LogOut = new JButton("Log Out");
+		LogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				int i = JOptionPane.showConfirmDialog(null, "Are you sure to Log Out?", "Confirm", JOptionPane.YES_NO_OPTION);
+				if (i == JOptionPane.YES_OPTION) {
+					dispose();
+					new Login_UI();
+				}
 			}
 		});
 		vbox = Box.createVerticalBox();
@@ -114,6 +142,7 @@ public class MemForm extends JFrame {
 		JPanelNorth_second_row.add(DeleteStudent);
 		JPanelNorth_second_row.add(QueryStudent);
 		JPanelNorth_second_row.add(EditInfo);
+		JPanelNorth_second_row.add(LogOut);
 		vbox.add(JPanelNorth_first_row);
 		vbox.add(JPanelNorth_second_row);
 		/* JPanelCentre showing some items of Student Information data in database.
@@ -188,6 +217,7 @@ public class MemForm extends JFrame {
 		this.setBounds(400, 200, 1090, 400);
 		this.setResizable(false);
 		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		/*
 		 * haven't set DefaultClose yet,
 		 * Once the system is closed,

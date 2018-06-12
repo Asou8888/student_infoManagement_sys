@@ -12,6 +12,8 @@ import javax.swing.SwingConstants;
 import DAO.BaseDAO;
 import DAO.DAO;
 import DAO.UserDAO;
+import Actor.StudentInformation;
+import DAO.StudentDAO;
 // import DAO.StudentDAO;
 // import Actor.StudentInformation;
 
@@ -47,8 +49,20 @@ public class StudentRegist extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				if (insert_data(username, password, false)) {
 					dispose();
+					new MemForm(username);
+					if (!(student_number_input.getText().equals("") || student_number_input.getText() == null)) {
+						StudentInformation student = ((StudentDAO)BaseDAO.get_ability_DAO(DAO.StudentDAO)).query_student(student_number_input.getText());
+						if (student == null) {
+							JOptionPane.showMessageDialog(null, "No such student found!");
+						} else {
+							if (((UserDAO)BaseDAO.get_ability_DAO(DAO.UserDAO)).update_for_linking(username, student_number_input.getText())) {
+								JOptionPane.showMessageDialog(null, "Build link between user and student succeeded!");
+							} else {
+								JOptionPane.showMessageDialog(null, "Database link error!", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}
 					JOptionPane.showMessageDialog(null, "Regist Passed!");
-					new MemForm();
 				} else {
 					dispose();
 					JOptionPane.showMessageDialog(null, "Database Linking Failure!", "Error", JOptionPane.ERROR_MESSAGE);

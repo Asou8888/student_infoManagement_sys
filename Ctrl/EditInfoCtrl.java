@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import GUI.MemForm;
 import GUI.Operation;
 import GUI.StudentInfoView;
 import Actor.StudentInformation;

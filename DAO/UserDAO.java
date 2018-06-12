@@ -70,6 +70,16 @@ public class UserDAO extends BaseDAO {
 		}
 		return result;
 	}
+	public Boolean update_for_linking(String username, String student_number) {
+		String sql = "insert into user_student_link(username, student_number) values(?,?)";
+		Object[] param = {username, student_number};
+		int result = db.excute_update(sql, param);
+		if (result < 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	public static void main(String[] args) {
 		new UserDAO();
 	}

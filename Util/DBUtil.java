@@ -100,8 +100,4 @@ public class DBUtil {
 			exception.printStackTrace();
 		}
 	}
-	public static void main(String[] args) {
-		DBUtil dbutil = new DBUtil();
-		// System.out.printf("%d", dbutil.get_connection());
-	}
 }
