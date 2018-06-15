@@ -116,14 +116,14 @@ public class Regist_UI extends JFrame {
 	}
 	// check the form of input username
 	private Boolean check_username_form(String username) {
-		String regex = "^[A-Za-z][A-Za-z0-9_-]{6,19}$";
+		String regex = "^[A-Za-z][A-Za-z0-9_-]{5,19}$";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(username);
 		return matcher.matches();
 	}
 	// check the form of input password
 	private Boolean check_password_form(String password) {
-		String regex = "[A-Za-z0-9]{8,20}$";
+		String regex = "[A-Za-z0-9]{7,20}$";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(password);
 		return matcher.matches();

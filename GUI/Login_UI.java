@@ -86,14 +86,6 @@ public class Login_UI extends JFrame {
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	/*private class LoginListener() extends KeyAdapter {
-		public void KeyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-				check_login_information(username_input.getText(), String.valueOf(password_input.getPassword()));
-			}
-		}
-	}
-	*/
 	private Boolean check_login_information() {
 		UserDAO userDAO = (UserDAO)BaseDAO.get_ability_DAO(DAO.UserDAO);
 		if (userDAO.query_for_login(username_input.getText(), String.valueOf(password_input.getPassword()))) {

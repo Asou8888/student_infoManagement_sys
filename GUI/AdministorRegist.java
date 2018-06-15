@@ -46,7 +46,7 @@ public class AdministorRegist extends JFrame {
 					if (insert_data(username, password, true)) {
 						dispose();
 						JOptionPane.showMessageDialog(null, "Regist Passed!");
-						new MemForm();
+						new MemForm(username);
 					} else {
 						dispose();
 						JOptionPane.showMessageDialog(null, "Database Linking Failure!", "Error", JOptionPane.ERROR_MESSAGE);
